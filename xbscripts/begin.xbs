@@ -1,0 +1,84 @@
+/*
+ *  Proyecto Tpuy.
+ *
+ *  begin.xbs Programa Inicial. 
+ *  
+ */
+
+#include "tpy_xbs.ch"
+
+Function begin()
+
+   LOCAL oWnd , oConn, oForm
+
+   SET PUBLIC oForm
+
+   oTpuy:cSystem_Name := "SuperSistema"
+   oTpuy:cVersion     := "0.0.1"
+
+   oTPuy:cFileConnections := "tpy_connections.xml"
+   oTPuy:cHost := "localhost"
+   oTPuy:cPort := ""
+   oTPuy:cDB   := ""
+   oTPuy:cUser := ""
+   oTpuy:cPass := ""
+
+   oTPuy:cIconMain := "tpuy.ico"
+   
+   SET PUBLIC ::oConn
+
+   ::cResFile := oTpuy:cResources + "main.ui"
+
+   SET RESOURCES ::oRes FROM FILE ::cResFile
+
+   if FILE( GetEnv("homedrive")+oTPuy:cTemps+oTPuy:cFileConnections )
+      oTPuy:RunXBS("initialize", "CONNECT", .t., oForm )
+   else
+      MsgInfo("Necesita indicar datos de conexión.",;
+              "Atención.")
+   endif
+
+
+   DEFINE WINDOW ::oWnd TITLE oTPuy:cSystem_Name + ". Ventana Inicial" ;
+      ID "wnd_main" RESOURCE ::oRes
+
+      DEFINE IMAGE ::oImgBanner            ;
+         FILE oTPuy:cImages+"banner01.png" ;
+         ID "img_banner" RESOURCE ::oRes
+         ::oImgBanner:Adjust(450,70)
+      
+      DEFINE IMAGE ::oImgPresent ;
+         FILE oTPuy:cImages+"pos_01.png" ;
+         ID "img_present" RESOURCE ::oRes
+         ::oImgPresent:Adjust( 200 )
+
+      DEFINE BUTTON ::oBtnConfig ACTION oTPuy:RunXBS("connconfig", oForm ) ;
+             ID "btn_config" RESOURCE ::oRes
+
+      DEFINE BUTTON ::oBtnSalir ACTION Salir() ;
+             ID "btn_exit" RESOURCE ::oRes
+
+
+   ACTIVATE WINDOW ::oWnd INITIATE
+
+return .t.
+
+
+
+/** Un ejemplo de como se podría manipular más fácilmente el objeto de conexión.
+ */
+procedure __Prueba( oForm )
+
+#xtranslate <object>:CONN:<connection>  =>  <object>:oConn:<connection>["oConn"]
+#xcommand   SET DBCONN <connection>     =>  oTPuy:oConn := oForm:oConn:<connection>["oConn"]
+#xtranslate oDBConn                     =>  oTPuy:oConn
+
+View( ::CONN:default )
+SET DBCONN mi_conexion
+View( oDBConn )
+
+return
+
+
+
+//eof
