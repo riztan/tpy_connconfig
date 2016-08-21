@@ -7,3 +7,6 @@ Básicamente ofrece una ventana inicial con un botón que apunta a abrir otra ve
 
 El archivo XML se almacena en la carpeta del usuario.
 
+Igualmente el programa sirve de referencia para mostrar como se puede utilizar tpuy en algún proyecto personal.
+
+
